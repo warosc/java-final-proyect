@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -8,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main {
+public class Main extends JFrame {
     Scanner sc = new Scanner(System.in);
     RandomAccessFile fichero = null, entidades = null, atributos = null;
     private final String rutaBase = "/";
@@ -21,6 +22,11 @@ public class Main {
     private List<Entidad> listaEntidades = new ArrayList<>();
     public static void main(String[] args) {
         Main ad = new Main();
+        JFrame frame = new JFrame("Base de Datos");
+        frame.setContentPane(new BasedeDatos().mainGUI);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
         if (ad.validarDefinicion()) {
             ad.menuDefinicion(true);
         } else {
@@ -105,7 +111,7 @@ public class Main {
         }
     }
 
-    private boolean agregarEntidad() {
+    public boolean agregarEntidad() {
         boolean resultado = false;
         try {
             Entidad entidad = new Entidad();
@@ -121,7 +127,7 @@ public class Main {
                 } else {
                     if (strNombre.contains(" ")) {
                         System.out
-                                .println("El nombre no puede contener espacios, sustituya por guion bajo (underscore)");
+                                .println("El nombre no puede contener espacios, sustituya por guion bajo");
                         longitud = 0;
                     }
                 }
