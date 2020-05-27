@@ -1,4 +1,5 @@
 public class Atributo {
+
     private int indice;
     private String nombre;
     private int valorTipoDato;
@@ -17,12 +18,26 @@ public class Atributo {
         this.indice = indice;
     }
 
+
     public String getNombre() {
         return nombre;
     }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+        bytesNombre = new byte[30];
+         for (int i = 0; i < nombre.length(); i++) {
+            bytesNombre[i] = (byte)nombre.charAt(i);
+        }
+    }
+
+    public byte[] getBytesNombre() {
+        return bytesNombre;
+    }
+
+    public void setBytesNombre(byte[] bytesNombre) {
+        this.bytesNombre = bytesNombre;
+        nombre = new String(bytesNombre);
     }
 
     public int getValorTipoDato() {
@@ -31,14 +46,9 @@ public class Atributo {
 
     public void setValorTipoDato(int valorTipoDato) {
         this.valorTipoDato = valorTipoDato;
-    }
-
-    public String getNombreTipoDato() {
-        return nombreTipoDato;
-    }
-
-    public void setNombreTipoDato(String nombreTipoDato) {
-        this.nombreTipoDato = nombreTipoDato;
+        if (valorTipoDato == TipoDatos.STRING.getValue()) {
+            this.requiereLongitud = true;
+        }
     }
 
     public int getLongitud() {
@@ -49,35 +59,61 @@ public class Atributo {
         this.longitud = longitud;
     }
 
-    public int getBytes() {
-        return bytes;
-    }
-
-    public void setBytes(int bytes) {
-        this.bytes = bytes;
-    }
-
     public boolean isRequiereLongitud() {
         return requiereLongitud;
     }
 
-    public void setRequiereLongitud(boolean requiereLongitud) {
-        this.requiereLongitud = requiereLongitud;
+    public String getNombreTipoDato() {
+        return nombreTipoDato;
     }
 
-    public byte[] getBytesNombre() {
-        return bytesNombre;
+    public void setNombreTipoDato() {
+        if (this.valorTipoDato == TipoDatos.STRING.getValue()) {
+            this.nombreTipoDato = TipoDatos.STRING.name();
+            this.bytes = this.longitud;
+            tipoDato = TipoDatos.STRING;
+        }
+        if (this.valorTipoDato == TipoDatos.INT.getValue()) {
+            this.nombreTipoDato = TipoDatos.INT.name();
+            this.bytes = 4;
+            tipoDato = TipoDatos.INT;
+        }
+        if (this.valorTipoDato == TipoDatos.LONG.getValue()) {
+            this.nombreTipoDato = TipoDatos.LONG.name();
+            this.bytes = 8;
+            tipoDato = TipoDatos.LONG;
+        }
+        if (this.valorTipoDato == TipoDatos.DOUBLE.getValue()) {
+            this.nombreTipoDato = TipoDatos.DOUBLE.name();
+            this.bytes = 8;
+            tipoDato = TipoDatos.DOUBLE;
+        }
+        if (this.valorTipoDato == TipoDatos.FLOAT.getValue()) {
+            this.nombreTipoDato = TipoDatos.FLOAT.name();
+            this.bytes = 4;
+            tipoDato = TipoDatos.FLOAT;
+        }
+        if (this.valorTipoDato == TipoDatos.DATE.getValue()) {
+            this.nombreTipoDato = TipoDatos.DATE.name();
+            this.bytes = 28;
+            tipoDato = TipoDatos.DATE;
+        }
+        if (this.valorTipoDato == TipoDatos.CHAR.getValue()) {
+            this.nombreTipoDato = TipoDatos.CHAR.name();
+
+            this.bytes = 1;
+            tipoDato = TipoDatos.CHAR;
+        }
     }
 
-    public void setBytesNombre(byte[] bytesNombre) {
-        this.bytesNombre = bytesNombre;
+     public int getBytes() {
+        return bytes;
     }
 
     public TipoDatos getTipoDato() {
         return tipoDato;
     }
 
-    public void setTipoDato(TipoDatos tipoDato) {
-        this.tipoDato = tipoDato;
+    public void setValorTipoDato() {
     }
 }

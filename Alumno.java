@@ -1,4 +1,5 @@
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -11,6 +12,7 @@ public class Alumno {
     private double peso;
     private byte[] bytesNombre;
     private byte[] bytesTelefono;
+    private byte[] bytesFechaNacimiento;
 
     public DateFormat getFormatoFecha() {
         return formatoFecha;
@@ -80,5 +82,15 @@ public class Alumno {
     public void setBytesTelefono(byte[] bytesTelefono) {
         this.bytesTelefono = bytesTelefono;
         telefono = new String(bytesTelefono);
+    }
+
+    public void setBytesFechaNacimiento(byte[] bytesFechaNacimiento) throws ParseException {
+        this.bytesFechaNacimiento = bytesFechaNacimiento;
+        String strFecha = new String(bytesFechaNacimiento);
+        this.fechaNacimiento = formatoFecha.parse(strFecha);
+    }
+
+    public byte[] getBytesFechaNacimiento() {
+        return bytesFechaNacimiento;
     }
 }
