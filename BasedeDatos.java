@@ -1,9 +1,8 @@
 import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
-import java.awt.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 
 public class BasedeDatos {
 
@@ -24,13 +23,21 @@ public class BasedeDatos {
         addEnti.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                main.agregarEntidad();
+                MenuEntidad menuEntidad = null;
+                try {
+                    menuEntidad = new MenuEntidad();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                menuEntidad.setVisible(true);
+
             }
         });
         modEnti.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
 
+                //main.modificarEntidad();
             }
         });
     }

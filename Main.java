@@ -116,22 +116,21 @@ public class Main extends JFrame {
         try {
             Entidad entidad = new Entidad();
             entidad.setIndice(listaEntidades.size() + 1);
-            System.out.println("Ingrese el nombre de la entidad");
-            String strNombre = "";
+            String strNombre = JOptionPane.showInputDialog("Ingrese el nombre de la entidad");
             int longitud = 0;
             do {
-                strNombre = sc.nextLine();
+                //strNombre = sc.nextLine();
                 longitud = strNombre.length();
                 if (longitud < 2 || longitud > 30) {
-                    System.out.println("La longitud del nombre no es valida [3 - 30]");
+                    JOptionPane.showMessageDialog(null,"La longitud del nombre no es valida [3 - 30]");
                 } else {
                     if (strNombre.contains(" ")) {
-                        System.out
-                                .println("El nombre no puede contener espacios, sustituya por guion bajo");
+                        System.out.println("El nombre no puede contener espacios, sustituya por guion bajo");
                         longitud = 0;
                     }
                 }
             } while (longitud < 2 || longitud > 30);
+
             entidad.setNombre(strNombre);
             System.out.println("Atributos de la entidad");
             int bndDetener = 0;
@@ -139,7 +138,7 @@ public class Main extends JFrame {
                 Atributo atributo = new Atributo();
                 atributo.setIndice(entidad.getIndice());
                 longitud = 0;
-                System.out.println("Escriba el nombre del atributo no. " + (entidad.getCantidad() + 1));
+                JOptionPane.showInputDialog("Escriba el nombre del atributo no. " + (entidad.getCantidad() + 1));
                 do {
                     strNombre = sc.nextLine();
                     longitud = strNombre.length();
@@ -179,23 +178,23 @@ public class Main extends JFrame {
             System.out.println("Presione 1 para guardar 0 para cancelar");
             longitud = sc.nextInt();
             if (longitud == 1) {
-                entidad.setPosicion(atributos.length());
-                atributos.seek(atributos.length());
-                for (Atributo atributo : entidad.getAtributos()) {
-                    atributos.writeInt(atributo.getIndice());
-                    atributos.write(atributo.getBytesNombre());
-                    atributos.writeInt(atributo.getValorTipoDato());
-                    atributos.writeInt(atributo.getLongitud());
-                    atributos.write("\n".getBytes());
-                }
-                entidades.writeInt(entidad.getIndice());
-                entidades.write(entidad.getBytesNombre());
-                entidades.writeInt(entidad.getCantidad());
-                entidades.writeInt(entidad.getBytes());
-                entidades.writeLong(entidad.getPosicion());
-                entidades.write("\n".getBytes());
-                listaEntidades.add(entidad);
-                resultado = true;
+                    entidad.setPosicion(atributos.length());
+                    atributos.seek(atributos.length());
+                    for (Atributo atributo : entidad.getAtributos()) {
+                        atributos.writeInt(atributo.getIndice());
+                        atributos.write(atributo.getBytesNombre());
+                        atributos.writeInt(atributo.getValorTipoDato());
+                        atributos.writeInt(atributo.getLongitud());
+                        atributos.write("\n".getBytes());
+                    }
+                    entidades.writeInt(entidad.getIndice());
+                    entidades.write(entidad.getBytesNombre());
+                    entidades.writeInt(entidad.getCantidad());
+                    entidades.writeInt(entidad.getBytes());
+                    entidades.writeLong(entidad.getPosicion());
+                    entidades.write("\n".getBytes());
+                    listaEntidades.add(entidad);
+                    resultado = true;
             } else {
                 System.out.println("No se guardo la entidad debido a que el usuario decidio cancelarlo");
                 resultado = false;
@@ -209,7 +208,7 @@ public class Main extends JFrame {
         return resultado;
     }
 
-    private void modificarEntidad() {
+    public void modificarEntidad() {
         try {
             int indice = 0;
             while (indice < 1 || indice > listaEntidades.size()) {
@@ -486,7 +485,7 @@ public class Main extends JFrame {
         }
     }
 
-    private boolean grabarRegistro(Entidad entidad) {
+    public boolean grabarRegistro(Entidad entidad) {
         boolean resultado = false;
         try {
 
