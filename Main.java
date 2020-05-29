@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main extends JFrame {
+public class Main  {
     Scanner sc = new Scanner(System.in);
     RandomAccessFile fichero = null, entidades = null, atributos = null;
     private final String rutaBase = "/";
@@ -32,7 +32,7 @@ public class Main extends JFrame {
         } else {
             ad.menuDefinicion(false);
         }
-        System.exit(0); // finalize application
+        System.exit(0);
     }
 
     private boolean validarDefinicion() {
@@ -77,7 +77,7 @@ public class Main extends JFrame {
                         a.setBytesNombre(bNombreAtributo);
                         a.setValorTipoDato(atributos.readInt());
                         a.setLongitud(atributos.readInt());
-                        a.setValorTipoDato();
+                        a.setValorTipoDato(atributos.readInt());
                         atributos.readByte();
                         e.setAtributo(a);
                         longitudAtributos -= bytesAtributo;
@@ -94,7 +94,7 @@ public class Main extends JFrame {
         return res;
     }
 
-    private void mostrarEntidad(Entidad entidad) {
+    public void mostrarEntidad(Entidad entidad) {
         System.out.println("Indice: " + entidad.getIndice());
         System.out.println("Nombre: " + entidad.getNombre());
         System.out.println("Cantidad de atributos: " + entidad.getCantidad());
@@ -116,13 +116,14 @@ public class Main extends JFrame {
         try {
             Entidad entidad = new Entidad();
             entidad.setIndice(listaEntidades.size() + 1);
-            String strNombre = JOptionPane.showInputDialog("Ingrese el nombre de la entidad");
+             System.out.println("Ingrese el nombre de la entidad");
+            String strNombre = null;
             int longitud = 0;
             do {
-                //strNombre = sc.nextLine();
+                strNombre = sc.nextLine();
                 longitud = strNombre.length();
                 if (longitud < 2 || longitud > 30) {
-                    JOptionPane.showMessageDialog(null,"La longitud del nombre no es valida [3 - 30]");
+                    System.out.println("La longitud del nombre no es valida");
                 } else {
                     if (strNombre.contains(" ")) {
                         System.out.println("El nombre no puede contener espacios, sustituya por guion bajo");
@@ -138,7 +139,7 @@ public class Main extends JFrame {
                 Atributo atributo = new Atributo();
                 atributo.setIndice(entidad.getIndice());
                 longitud = 0;
-                JOptionPane.showInputDialog("Escriba el nombre del atributo no. " + (entidad.getCantidad() + 1));
+                System.out.println("Escriba el nombre del atributo no. " + (entidad.getCantidad() + 1));
                 do {
                     strNombre = sc.nextLine();
                     longitud = strNombre.length();
@@ -837,6 +838,7 @@ public class Main extends JFrame {
             }
         } while (salir != 0);
     }
+
 
 }
 

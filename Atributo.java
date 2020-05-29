@@ -114,6 +114,5 @@ public class Atributo {
         return tipoDato;
     }
 
-    public void setValorTipoDato() {
-    }
+
 }
