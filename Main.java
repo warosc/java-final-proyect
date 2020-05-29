@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.table.TableModel;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -19,6 +20,9 @@ public class Main  {
     private final static String formatoFecha = "dd/MM/yyyy";
     static DateFormat format = new SimpleDateFormat(formatoFecha);
 
+
+
+
     private List<Entidad> listaEntidades = new ArrayList<>();
     public static void main(String[] args) {
         Main ad = new Main();
@@ -27,6 +31,13 @@ public class Main  {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+        //tabla de datos
+
+
+
+
+        //termina el frame table
+
         if (ad.validarDefinicion()) {
             ad.menuDefinicion(true);
         } else {
@@ -93,9 +104,17 @@ public class Main  {
         }
         return res;
     }
+    public static JTable createTable() {
+        String[] columnNames = {"Indice", "Nombre", "Cantidad de atributos","Atributos"};
+        Object[][] data = {{}};
+        JTable table = new JTable(data, columnNames);
+        table.setFillsViewportHeight(true);
+        return table;
+    }
 
     public void mostrarEntidad(Entidad entidad) {
-        System.out.println("Indice: " + entidad.getIndice());
+
+        Object[][] data = {{entidad.getIndice()}};
         System.out.println("Nombre: " + entidad.getNombre());
         System.out.println("Cantidad de atributos: " + entidad.getCantidad());
         System.out.println("Atributos:");

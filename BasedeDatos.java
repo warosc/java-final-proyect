@@ -1,3 +1,4 @@
+import javax.management.openmbean.OpenMBeanAttributeInfo;
 import javax.swing.*;
 
 import java.awt.event.ActionEvent;
@@ -32,6 +33,7 @@ public class BasedeDatos {
     private JComboBox comboBox1;
     private JButton btnTipoDAto;
     private JTextField tipoDatoSelecionado;
+    private JButton exitButton;
     private List<Entidad> listaEntidades = new ArrayList<>();
 
     public BasedeDatos() {
@@ -94,8 +96,8 @@ public class BasedeDatos {
                                 }
                             }
                         } while (longitud < 2 || longitud > 30);
-                        atributo.setNombre(strNombre);
-                        atributo.setValorTipoDato(sc.nextInt());
+                        atributo.setValorTipoDato(comboBox1.getItemCount());
+                        //atributo.setValorTipoDato(sc.nextInt());
                         if (atributo.isRequiereLongitud()) {
                             System.out.println("Ingrese la longitud");
                             atributo.setLongitud(sc.nextInt());
@@ -104,9 +106,9 @@ public class BasedeDatos {
                         }
                         atributo.setNombreTipoDato();
                         entidad.setAtributo(atributo);
-                        System.out.println("Desea agregar otro atributo presione cualquier numero, de lo contrario 0");
-                        bndDetener = sc.nextInt();
-                    } while (bndDetener != 0);
+                        int input = JOptionPane.showConfirmDialog(null, "Desea Continuar");  // 0 si y 1 no
+                        bndDetener = input;
+                     } while (bndDetener !=0);
                     System.out.println("Los datos a registrar son: ");
                     main.mostrarEntidad(entidad);
                     System.out.println("Presione 1 para guardar 0 para cancelar");
@@ -146,8 +148,11 @@ public class BasedeDatos {
         modEnti.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
-                //main.modificarEntidad();
+                try {
+                    new MenuEntidad(this,true).setVisible(true);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         listEnti.addActionListener(new ActionListener() {
@@ -163,9 +168,12 @@ public class BasedeDatos {
                 tipoDatoSelecionado.setText(comboBox1.getSelectedItem().toString());
             }
 
-
-
-
+        });
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.exit(0);
+            }
         });
     }
 

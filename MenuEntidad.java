@@ -1,9 +1,8 @@
 import javax.swing.*;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 
 public class MenuEntidad extends JDialog {
     private JPanel contentPane;
@@ -11,17 +10,21 @@ public class MenuEntidad extends JDialog {
     private JButton buttonCancel;
     private JTextField textNombreEnti;
     private JTextField textAtribuEnti;
-    private JList TipoDato;
+    private JTable tableDatos;
 
 
-    public MenuEntidad() throws FileNotFoundException {
+    public MenuEntidad(ActionListener actionListener, boolean b) throws FileNotFoundException {
         Main main = new Main();
+
 
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         textNombreEnti.setText(null);
         textAtribuEnti.setText(null);
+
+
+
 
             buttonCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -47,13 +50,12 @@ public class MenuEntidad extends JDialog {
         buttonOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Entidad entidad = new Entidad();
 
-                main.agregarEntidad();
-
-                  }
+                                  }
         });
     }
+
+
 
     private void onOK() {
         // add your code here
@@ -65,8 +67,8 @@ public class MenuEntidad extends JDialog {
         dispose();
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
-        MenuEntidad dialog = new MenuEntidad();
+    public void main(String[] args) throws FileNotFoundException {
+        MenuEntidad dialog = new MenuEntidad((ActionListener) this, true);
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
