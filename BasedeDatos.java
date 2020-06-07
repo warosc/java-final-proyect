@@ -1,9 +1,13 @@
 import javax.management.openmbean.OpenMBeanAttributeInfo;
 import javax.swing.*;
+import javax.swing.filechooser.FileSystemView;
+import javax.swing.table.DefaultTableModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,6 +25,7 @@ public class BasedeDatos {
     private final int totalBytes = 83, bytesEntidad = 47, bytesAtributo = 43;
     private final static String formatoFecha = "dd/MM/yyyy";
     static DateFormat format = new SimpleDateFormat(formatoFecha);
+
     public JPanel mainGUI;
     private JMenuBar jbarMenu;
     private JMenuItem addEnti;
@@ -34,10 +39,19 @@ public class BasedeDatos {
     private JButton btnTipoDAto;
     private JTextField tipoDatoSelecionado;
     private JButton exitButton;
+    private JButton cargarFileButton;
+    private JTable jtableEntidad;
+    private JButton buttonSave;
+    private JTextArea textArea1;
+    private JLabel lblAtributoNo;
+    private JTextField NumAtributo;
     private List<Entidad> listaEntidades = new ArrayList<>();
+    private DefaultTableModel tableModel;
 
     public BasedeDatos() {
         Main main = new Main();
+
+
         //JOptionPane.showMessageDialog(null,"Seleccione el tipo de dato");
         comboBox1.addItem(TypeData.INT.getValue() + " .......... " + TypeData.INT.name());
         comboBox1.addItem(TypeData.LONG.getValue() + " .......... " + TypeData.LONG.name());
@@ -47,9 +61,15 @@ public class BasedeDatos {
         comboBox1.addItem(TypeData.DATE.getValue() + " .......... " + TypeData.DATE.name());
         comboBox1.addItem(TypeData.CHAR.getValue() + " .......... " + TypeData.CHAR.name());
 
+        tableModel = new DefaultTableModel();
+        tableModel.addColumn("ID");
+        tableModel.addColumn("Nombre");
+        tableModel.addColumn("Cantidad");
+        jtableEntidad = new JTable();
+        jtableEntidad.setModel(tableModel);
+        JScrollPane scrollPane = new JScrollPane(jtableEntidad);
 
-
-
+        //main.validarDefinicion();
 
         addEnti.addActionListener(new ActionListener() {
             @Override
@@ -63,44 +83,44 @@ public class BasedeDatos {
                     int longitud = 0;
                     do {
                         entidad.setNombre(textFieldNombre.getText().trim());
-                        longitud = entidad.getNombre().length();
+                        longitud = textFieldNombre.getText().length();
                         strNombre = entidad.getNombre();
                         if (longitud < 2 || longitud > 30) {
-                            JOptionPane.showMessageDialog(null,"La longitud no es valida");
+                            JOptionPane.showMessageDialog(null, "La longitud no es valida");
                         } else {
                             if (strNombre.contains(" ")) {
-                                JOptionPane.showMessageDialog(null,"El nombre no puede contener espacios, sustituya por guion bajo");
+                                JOptionPane.showMessageDialog(null, "El nombre no puede contener espacios, sustituya por guion bajo");
                                 longitud = 0;
                             }
                         }
                     } while (longitud < 2 || longitud > 30);
 
                     entidad.setNombre(textFieldNombre.getText().trim());
-                    JOptionPane.showMessageDialog(null,"Atrubuto de Identidad");
+                    JOptionPane.showMessageDialog(null, "Atributo de Identidad");
                     int bndDetener = 0;
                     do {
                         Atributo atributo = new Atributo();
                         atributo.setIndice(entidad.getIndice());
                         longitud = 0;
-                        JOptionPane.showInputDialog("Escriba el nombre de atributo no" + (entidad.getCantidad()+1));
+                        JOptionPane.showInputDialog("Escriba el nombre de atributo no" + (entidad.getCantidad() + 1));
                         do {
-                            strNombre = JOptionPane.showInputDialog("Ingrese Atributo: ");
-                            longitud = strNombre.length();
+                            JOptionPane.showInputDialog("Ingrese Atributo: ");
+                            longitud = NumAtributo.getText().length();
+                            //longitud = textFieldAtrubuto.getText().length();
                             if (longitud < 2 || longitud > 30) {
-                                JOptionPane.showMessageDialog(null,"La longitud del nombre no es valida");
+                                JOptionPane.showMessageDialog(null, "La longitud del nombre no es valida");
                             } else {
                                 if (strNombre.contains(" ")) {
-                                    System.out.println(
-                                            "El nombre no puede contener espacios, sustituya por guion bajo");
+                                    System.out.println("El nombre no puede contener espacios, sustituya por guion bajo");
                                     longitud = 0;
                                 }
                             }
                         } while (longitud < 2 || longitud > 30);
-                        atributo.setValorTipoDato(comboBox1.getItemCount());
+                        atributo.setValorTipoDato(comboBox1.getSelectedItem().toString().length());
                         //atributo.setValorTipoDato(sc.nextInt());
                         if (atributo.isRequiereLongitud()) {
-                            System.out.println("Ingrese la longitud");
-                            atributo.setLongitud(sc.nextInt());
+                            String longitudAux = JOptionPane.showInputDialog("Ingrese la longitud");
+                            atributo.setLongitud(Integer.parseInt(longitudAux));
                         } else {
                             atributo.setLongitud(0);
                         }
@@ -108,11 +128,9 @@ public class BasedeDatos {
                         entidad.setAtributo(atributo);
                         int input = JOptionPane.showConfirmDialog(null, "Desea Continuar");  // 0 si y 1 no
                         bndDetener = input;
-                     } while (bndDetener !=0);
+                    } while (bndDetener != 0);
                     System.out.println("Los datos a registrar son: ");
-                    main.mostrarEntidad(entidad);
-                    System.out.println("Presione 1 para guardar 0 para cancelar");
-                    longitud = sc.nextInt();
+
                     if (longitud == 1) {
                         entidad.setPosicion(atributos.length());
                         atributos.seek(atributos.length());
@@ -144,12 +162,17 @@ public class BasedeDatos {
                 //return resultado;
             }
 
+
+
+
+
+
         });
         modEnti.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
-                    new MenuEntidad(this,true).setVisible(true);
+                    new MenuEntidad(this, true).setVisible(true);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -175,9 +198,26 @@ public class BasedeDatos {
                 System.exit(0);
             }
         });
+        cargarFileButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+
+
+            }
+
+        });
+
+
     }
-
-
-
-
 }
+
+
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,7 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -10,8 +12,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main  {
+public class Main {
     Scanner sc = new Scanner(System.in);
+    private DefaultTableModel tableModel;
     RandomAccessFile fichero = null, entidades = null, atributos = null;
     private final String rutaBase = "/";
     private final String rutaEntidades = "entidades.dat";
@@ -21,9 +24,8 @@ public class Main  {
     static DateFormat format = new SimpleDateFormat(formatoFecha);
 
 
-
-
     private List<Entidad> listaEntidades = new ArrayList<>();
+
     public static void main(String[] args) {
         Main ad = new Main();
         JFrame frame = new JFrame("Base de Datos");
@@ -32,12 +34,7 @@ public class Main  {
         frame.pack();
         frame.setVisible(true);
         //tabla de datos
-
-
-
-
         //termina el frame table
-
         if (ad.validarDefinicion()) {
             ad.menuDefinicion(true);
         } else {
@@ -46,7 +43,8 @@ public class Main  {
         System.exit(0);
     }
 
-    private boolean validarDefinicion() {
+
+    boolean validarDefinicion() {
         boolean res = false;
         try {
             entidades = new RandomAccessFile(rutaEntidades, "rw");
@@ -104,8 +102,10 @@ public class Main  {
         }
         return res;
     }
+
+    //temporal
     public static JTable createTable() {
-        String[] columnNames = {"Indice", "Nombre", "Cantidad de atributos","Atributos"};
+        String[] columnNames = {"Indice", "Nombre", "Cantidad de atributos", "Atributos"};
         Object[][] data = {{}};
         JTable table = new JTable(data, columnNames);
         table.setFillsViewportHeight(true);
@@ -135,7 +135,7 @@ public class Main  {
         try {
             Entidad entidad = new Entidad();
             entidad.setIndice(listaEntidades.size() + 1);
-             System.out.println("Ingrese el nombre de la entidad");
+            System.out.println("Ingrese el nombre de la entidad");
             String strNombre = null;
             int longitud = 0;
             do {
@@ -198,23 +198,23 @@ public class Main  {
             System.out.println("Presione 1 para guardar 0 para cancelar");
             longitud = sc.nextInt();
             if (longitud == 1) {
-                    entidad.setPosicion(atributos.length());
-                    atributos.seek(atributos.length());
-                    for (Atributo atributo : entidad.getAtributos()) {
-                        atributos.writeInt(atributo.getIndice());
-                        atributos.write(atributo.getBytesNombre());
-                        atributos.writeInt(atributo.getValorTipoDato());
-                        atributos.writeInt(atributo.getLongitud());
-                        atributos.write("\n".getBytes());
-                    }
-                    entidades.writeInt(entidad.getIndice());
-                    entidades.write(entidad.getBytesNombre());
-                    entidades.writeInt(entidad.getCantidad());
-                    entidades.writeInt(entidad.getBytes());
-                    entidades.writeLong(entidad.getPosicion());
-                    entidades.write("\n".getBytes());
-                    listaEntidades.add(entidad);
-                    resultado = true;
+                entidad.setPosicion(atributos.length());
+                atributos.seek(atributos.length());
+                for (Atributo atributo : entidad.getAtributos()) {
+                    atributos.writeInt(atributo.getIndice());
+                    atributos.write(atributo.getBytesNombre());
+                    atributos.writeInt(atributo.getValorTipoDato());
+                    atributos.writeInt(atributo.getLongitud());
+                    atributos.write("\n".getBytes());
+                }
+                entidades.writeInt(entidad.getIndice());
+                entidades.write(entidad.getBytesNombre());
+                entidades.writeInt(entidad.getCantidad());
+                entidades.writeInt(entidad.getBytes());
+                entidades.writeLong(entidad.getPosicion());
+                entidades.write("\n".getBytes());
+                listaEntidades.add(entidad);
+                resultado = true;
             } else {
                 System.out.println("No se guardo la entidad debido a que el usuario decidio cancelarlo");
                 resultado = false;
@@ -297,7 +297,7 @@ public class Main  {
                         break;
                     }
                     registros++;
-                   longitud -= totalBytes;
+                    longitud -= totalBytes;
                 }
             }
         } catch (Exception e) {
@@ -305,7 +305,7 @@ public class Main  {
         }
     }
 
-    private void menuDefinicion(boolean mostrarAgregarRegistro) {
+    void menuDefinicion(boolean mostrarAgregarRegistro) {
         int opcion = 1;
         while (opcion != 0) {
             System.out.println("Elija su opcion");
@@ -767,7 +767,7 @@ public class Main  {
 
                 longitud -= totalBytes;
             }
-                        if (!bndEncontrado) {
+            if (!bndEncontrado) {
                 System.out.println("No se encontro el carne indicado, por favor verifique");
             }
         } catch (Exception e) {
@@ -857,7 +857,6 @@ public class Main  {
             }
         } while (salir != 0);
     }
-
 
 }
 
